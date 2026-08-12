@@ -295,7 +295,7 @@ app.post('/api/generate-qr', async (req, res) => {
         }
 
         // Create QR data - Direct verification URL that opens in any QR scanner
-        const verificationUrl = `http://localhost:${PORT}/verify?eventId=${eventId}`;
+        const verificationUrl = `${req.protocol}://${req.get('host')}/verify?eventId=${eventId}`;
         
         // Generate QR code with direct URL (most scanners will open this directly)
         const qrCodeData = await QRCode.toDataURL(verificationUrl);
@@ -485,6 +485,8 @@ function getActivityDetails(block) {
 }
 
 // Serve static files
+app.get('/health', (req, res) => res.status(200).send('OK'));
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
